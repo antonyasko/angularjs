@@ -1,64 +1,50 @@
 const browserSync = require('browser-sync').create();
 const concat = require('gulp-concat');
-const gulp = require('gulp');
+const { src, dest, parallel, series, watch } = require('gulp');
+const del = require('del');
 
 const scripts = require('./scripts');
 const styles = require('./styles');
 
-let devMode = false;
-
-gulp.task('css', function () {
-  gulp
-    .src(styles)
-    .pipe(concat('main.css'))
-    .pipe(gulp.dest('./dist/css'))
-    .pipe(browserSync.reload({ stream: true }));
-});
-
-gulp.task('js', function () {
-  gulp
-    .src(scripts)
-    .pipe(concat('scripts.js'))
-    .pipe(gulp.dest('./dist/js'))
-    .pipe(browserSync.reload({ stream: true }));
-});
-
-gulp.task('html', function() {
-  gulp
-    .src('./src/templates/**/*.html')
-    .pipe(gulp.dest('./dist/'))
-    .pipe(browserSync.reload({ stream: true }));
-});
-
-gulp.task('build', function() {
-  gulp.start(['css', 'js', 'html']);
-});
-// gulp.task(
-//   'build',
-//   gulp.series(gulp.parallel(css, js, html), function (done) {
-//     done();
-//   })
-// );
-
-
-gulp.task('browser-sync', function() {
-  browserSync.init(null, {
-    open: false,
-    server: {
-      baseDir: 'dist',
-    },
+function browsersync() {
+  browserSync.init({
+    server: { baseDir: 'dist' },
+    notify: false,
+    online: true,
   });
-});
+}
 
-gulp.task('start', function() {
-  devMode = true;
-  
-  gulp.start(['build', 'browser-sync']);
-  // gulp.series(gulp.parallel(build, 'browser-sync'), function (done) {
-  //   done();
-  // })
+function js() {
+  return src(scripts)
+    .pipe(concat('scripts.js'))
+    .pipe(dest('dist/js'))
+    .pipe(browserSync.stream());
+}
 
-  gulp.watch(['./src/css/**/*.css'], ['css'])
-  gulp.watch(['./src/js/**/*.js'], ['js'])
-  gulp.watch(['./src/templates/**/*.html'], ['html'])
-});
+function css() {
+  return src(styles)
+    .pipe(concat('main.css'))
+    .pipe(dest('dist/css'))
+    .pipe(browserSync.stream());
+}
+
+function html() {
+  return src('src/templates/**/*.html')
+    .pipe(dest('dist/'))
+    .pipe(browserSync.stream());
+}
+
+function cleanDist() {
+  return del('dist/**/*', { force: true });
+}
+
+function startWatch() {
+  watch('./src/js/**/*.js', js);
+  watch('./src/css/**/*.css', css);
+  watch('./src/templates/**/*.html', html);
+}
+
+module.exports = {
+  build: series(cleanDist, css, js, html),
+  start: parallel(css, js, html, browsersync, startWatch),
+};
