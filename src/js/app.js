@@ -11,12 +11,19 @@ app.config([
       .when('/search', {
         templateUrl: 'views/search.html',
         controller: 'SearchCtrl',
+      })
+      .when('/author', {
+        templateUrl: 'views/author.html',
+        controller: 'AuthorCtrl',
       });
   },
 ]);
 
-app.factory('searchValue', function () {
+app.factory('state', function () {
   return {
-    value: 'hello world',
+    value: '',
+    page: 1,
+    data: [],
+    activeAuthor: null,
   };
 });

@@ -37878,28 +37878,96 @@ app.config([
       .when('/search', {
         templateUrl: 'views/search.html',
         controller: 'SearchCtrl',
+      })
+      .when('/author', {
+        templateUrl: 'views/author.html',
+        controller: 'AuthorCtrl',
       });
   },
 ]);
 
-app.factory('searchValue', function () {
+app.factory('state', function () {
   return {
-    value: 'hello world',
+    value: '',
+    page: 1,
+    data: [],
+    activeAuthor: null,
   };
 });
 
+angular.module('angularJSApp').controller('AuthorCtrl', 
+  function ($scope, state) {
+    $scope.author = state.activeAuthor;
+    $scope.page = state.page;
+    $scope.value = state.value;
+
+    if (state.activeAuthor === null) {
+      location.href = location.origin;
+    }
+  },
+);
+
 angular.module('angularJSApp').controller('HomeCtrl', 
-  function ($scope, searchValue) {
-    $scope.searchValue = searchValue;
+  function ($scope, $http, state) {
+    $scope.state = state;
 
     $scope.onSearch = function() {
-      searchValue.value = $scope.searchInput;
+      const input = $scope.searchInput;
+      if (input) {
+        state.value = $scope.searchInput;
+
+        $http.get(
+          `https://api.github.com/search/repositories?q=${state.value}&page=${state.page}&per_page=20`
+        ).then((res) => {
+          state.data = res.data.items;
+          location.href = location.origin + `/#!/search?query=${state.value}&page=${state.page}`;
+        }).catch((err) => {
+          console.log(err);
+        });
+      }
     };
   },
 );
 
 angular.module('angularJSApp').controller('SearchCtrl', 
-  function ($scope) {
-    $scope.results = 'Hello Results!!!';
+  function ($scope, $http, state) {
+    const cardsOnPage = 20;
+    
+    $scope.repos = state.data;
+
+    if (state.data.length === 0) {
+      location.href = location.origin;
+    }
+
+    $scope.onCardClick = function($event) {
+      location.href = location.origin + `/#!/author?authorName=${$event.target.dataset.author}`;
+      state.activeAuthor = state.data.find(repo => repo.id === Number($event.target.dataset.repoId))?.owner;
+    };
+
+    $scope.onPaginationClick = function($event) {
+      switch ($event.target.dataset.action) {
+        case 'prev':
+          if (state.page > 1) state.page -= 1;
+          break;
+        case 'next':
+          if (state.data.length === 20) state.page += 1;
+          break;
+        default:
+          break;
+      }
+
+      $http.get(
+        `https://api.github.com/search/repositories?q=${state.value}&page=${state.page}&per_page=${cardsOnPage}`
+      ).then((res) => {
+        const repos = res?.data?.items;
+        if (repos) {
+          state.data = repos;
+          $scope.repos = state.data;
+          location.href = location.origin + `/#!/search?query=${state.value}&page=${state.page}`;
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
   },
 );

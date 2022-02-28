@@ -15,7 +15,7 @@ body {
   max-width: 720px;
 }
 
-.search-bar label, .search-bar input, .search-bar button {
+.search-bar label, .search-bar input, .search-bar .search-button {
   font-size: 18px;
 }
 
@@ -27,7 +27,7 @@ body {
   border-radius: 5px;
 }
 
-.search-bar button {
+.search-bar .search-button {
   max-width: 180px;
   margin: 0 auto;
   padding: 8px 12px;
@@ -36,10 +36,86 @@ body {
   background-color: #008000;
   color: #ffffff;
   border: none;
+  text-decoration: none;
 }
 
-.search-bar button:hover {
+.search-bar .search-button:hover {
   background-color: #5b955b;
 }
 
+.card {
+  position: relative;
+  width: 500px;
+  height: 250px;
+  border: 2px solid #a9a9a9;
+  border-radius: 5px;
+  margin: 20px;
+  padding: 12px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card h2 {
+  word-break: break-word;
+}
+
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+ 
+.card .card-link:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  cursor: pointer;
+}
+
+.back {
+  display: block;
+  padding: 8px 12px;
+  background-color: #eba851;
+  font-size: 18px;
+  margin-bottom: 30px;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.user {
+  background-color: #f0ffff;
+  height: 100vh;
+}
+
+.user-name, .avatar, .user-id {
+  margin: 36px;
+}
+
+.avatar {
+  border-radius: 50%;
+}
+
+.pagination {
+  width: max-content;
+  margin: 30px auto 0;
+}
+
+.pagination button {
+  background-color: #008080;
+  border: none;
+  border-radius: 5px;
+  color: #ffffff;
+  padding: 8px 12px;
+  font-size: 18px;
+  width: 120px;
+  cursor: pointer;
+}
+
+.pagination button:hover {
+  background-color: #00b8b8;
+}
 
