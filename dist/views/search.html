@@ -1,0 +1,18 @@
+<div class="cards">
+  <a class="back" href="/">Back</a>
+
+  <div class="cards-container">
+    <div class="card" ng-repeat="repo in repos track by $index">
+      <h2>Repository name: {{repo.name}}</h2>
+      <span>Author: {{repo.owner.login}}</span>
+      <span>Language: {{repo.language}}</span>
+      <span>Stars: {{repo.stargazers_count}}</span>
+      <a ng-click="onCardClick($event)" class="card-link" data-repo-id="{{repo.id}}" data-author="{{repo.owner.login}}"></a>
+    </div>
+  </div>
+
+  <div class="pagination" ng-click="onPaginationClick($event)">
+    <button class="prev-page" data-action="prev">Previous</button>
+    <button class="next-page" data-action="next">Next</button>
+  </div>
+</div>

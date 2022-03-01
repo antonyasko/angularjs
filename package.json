@@ -1,0 +1,31 @@
+{
+  "name": "angularjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/antonyasko/angularjs.git"
+  },
+  "keywords": [
+    "angularjs",
+    "gulp"
+  ],
+  "author": "Anton Yasko",
+  "license": "ISC",
+  "homepage": "https://github.com/antonyasko/angularjs#readme",
+  "dependencies": {
+    "angular": "1.8.2",
+    "angular-route": "1.8.2",
+    "gulp": "4.0.2"
+  },
+  "devDependencies": {
+    "browser-sync": "2.27.7",
+    "del": "^6.0.0",
+    "gulp": "4.0.2",
+    "gulp-concat": "2.6.1"
+  }
+}
