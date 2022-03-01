@@ -25,5 +25,6 @@ app.factory('state', function () {
     page: 1,
     data: [],
     activeAuthor: null,
+    searchMessage: '',
   };
 });

@@ -2,4 +2,5 @@
   <label for="githubSearch">Search repositories in GitHub: </label>
   <input type="search" name="githubSearch" id="githubSearch" ng-model="searchInput" value={{state.value}}>
   <a type="button" class="search-button" ng-click="onSearch()">Search</a>
+  <span class="no-results">{{state.searchMessage}}</span>
 </div>
